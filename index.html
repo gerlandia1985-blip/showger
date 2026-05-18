@@ -7055,6 +7055,7 @@ Minha mulher assumiu que tava errada
                 `
             }
         ];
+
 // =========================================================================
 // COLE TODO O CONTEÚDO DO FICHEIRO "repertorio_pronto.txt" ACIMA DESTA LINHA
 // =========================================================================
@@ -7110,4 +7111,84 @@ Minha mulher assumiu que tava errada
         }
 
         function musicaAnterior() {
-            if (musicaAtualIndex >
+            if (musicaAtualIndex > 0) {
+                abrirMusica(musicaAtualIndex - 1);
+            }
+        }
+
+        function voltarParaSumario() {
+            pausar(); 
+            document.getElementById("tela-teleprompter").style.display = "none";
+            document.getElementById("tela-sumario").style.display = "block";
+            window.scrollTo(0, 0);
+        }
+
+        // ==========================================
+        // SISTEMA DO CRONÓMETRO DO SHOW
+        // ==========================================
+        let tempoSegundos = 0;
+        let cronometroAtivo = false;
+        let motorCronometro;
+
+        function toggleCronometro() {
+            if (cronometroAtivo) {
+                clearInterval(motorCronometro);
+                cronometroAtivo = false;
+                document.getElementById("btn-crono").innerText = "▶ Retomar";
+                document.getElementById("btn-crono").style.backgroundColor = "#f39c12"; 
+            } else {
+                cronometroAtivo = true;
+                document.getElementById("btn-crono").innerText = "⏸ Pausar Relógio";
+                document.getElementById("btn-crono").style.backgroundColor = "#e74c3c"; 
+                
+                motorCronometro = setInterval(() => {
+                    tempoSegundos++;
+                    atualizarVisorCronometro();
+                }, 1000);
+            }
+        }
+
+        function atualizarVisorCronometro() {
+            let horas = Math.floor(tempoSegundos / 3600);
+            let minutos = Math.floor((tempoSegundos % 3600) / 60);
+            let segundos = tempoSegundos % 60;
+            
+            let textoFormatado = 
+                String(horas).padStart(2, '0') + ":" + 
+                String(minutos).padStart(2, '0') + ":" + 
+                String(segundos).padStart(2, '0');
+                
+            document.getElementById("cronometro-visor").innerText = textoFormatado;
+        }
+
+        // ==========================================
+        // SISTEMA DE ROLAGEM
+        // ==========================================
+        let rolando = false;
+        let velocidade = 2;
+        let intervalo;
+
+        function iniciar() {
+            if (!rolando) {
+                rolando = true;
+                intervalo = setInterval(() => {
+                    window.scrollBy(0, velocidade); 
+                }, 50);
+            }
+        }
+
+        function pausar() {
+            rolando = false;
+            clearInterval(intervalo);
+        }
+
+        function mudarVelocidade(mudanca) {
+            velocidade += mudanca;
+            if (velocidade < 1) velocidade = 1; 
+            document.getElementById("visorVelocidade").innerText = velocidade;
+        }
+
+        carregarSumario();
+    </script>
+</body>
+</html>
